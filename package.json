@@ -1,0 +1,11 @@
+{
+  "name": "student-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Student Tools — AI-powered academic assistant platform",
+  "scripts": {
+    "build": "npm install --prefix frontend && npm run build --prefix frontend && npm install --prefix backend",
+    "start": "npm start --prefix backend",
+    "db:init": "npm run db:init --prefix backend"
+  }
+}

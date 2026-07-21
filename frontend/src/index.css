@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Design tokens — "calm study workspace"
+   Light in :root, dark under .dark (toggled on <html>).
+   ============================================================ */
+:root {
+  --bg: #eef1f8;
+  --wash: #e6ebf8;
+  --surface: #ffffff;
+  --surface-2: #f7f8fc;
+  --text: #141f38;
+  --text-2: #4c5670;
+  --faint: #8892a8;
+  --border: #e5e9f2;
+  --brand: #5850ec;
+  --brand-pressed: #463cd6;
+  --brand-tint: #ecebfd;
+}
+.dark {
+  --bg: #0d1020;
+  --wash: #141834;
+  --surface: #161a2e;
+  --surface-2: #1c2138;
+  --text: #f3f5fb;
+  --text-2: #aeb6cf;
+  --faint: #7b839e;
+  --border: #262c46;
+  --brand: #8b83ff;
+  --brand-pressed: #a49dff;
+  --brand-tint: #22234a;
+}
+
+html { background: var(--bg); }
+body {
+  min-height: 100vh;
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background:
+    radial-gradient(1100px 520px at 100% -5%, var(--wash), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+/* Smooth theme swap (colors only — never transforms/heights) */
+* { transition: background-color .25s ease, border-color .25s ease, color .2s ease; }
+
+/* ---- Reusable component classes ---- */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium text-white
+           transition disabled:opacity-50 disabled:cursor-not-allowed;
+    background: var(--brand);
+  }
+  .btn-primary:hover { background: var(--brand-pressed); }
+
+  .input {
+    @apply w-full rounded-lg px-3 py-2 outline-none;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .input::placeholder { color: var(--faint); }
+  .input:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 2px rgba(20, 31, 56, 0.04);
+  }
+}
+
+/* ============================================================
+   App-wide reskin: map the Tailwind utilities the pages already
+   use onto design tokens, so every page adopts the new palette
+   in BOTH themes without editing each file.
+   ============================================================ */
+.bg-white       { background-color: var(--surface) !important; }
+.bg-gray-50     { background-color: transparent !important; }
+.bg-gray-100    { background-color: var(--surface-2) !important; }
+.bg-gray-200    { background-color: color-mix(in srgb, var(--faint) 35%, transparent) !important; }
+.text-gray-900  { color: var(--text) !important; }
+.text-gray-800  { color: var(--text) !important; }
+.text-gray-700  { color: var(--text-2) !important; }
+.text-gray-600  { color: var(--text-2) !important; }
+.text-gray-500  { color: var(--faint) !important; }
+.text-gray-400  { color: var(--faint) !important; }
+.border-gray-100, .border-gray-200, .border-gray-300 { border-color: var(--border) !important; }
+.text-indigo-600, .text-indigo-500 { color: var(--brand) !important; }
+.bg-indigo-600  { background-color: var(--brand) !important; }
+.hover\:bg-indigo-700:hover { background-color: var(--brand-pressed) !important; }
+.hover\:bg-gray-100:hover { background-color: var(--surface-2) !important; }
+.hover\:bg-gray-50:hover  { background-color: var(--surface-2) !important; }
+.border-indigo-600 { border-color: var(--brand) !important; }
+
+/* ============================================================
+   Tool cards (color-coded; --accent set inline per card)
+   ============================================================ */
+.tool-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.25rem;
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.tool-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.tool-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.tool-card:hover::before { opacity: 1; }
+.tool-tile {
+  width: 46px; height: 46px;
+  border-radius: 13px;
+  display: grid; place-items: center;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  transition: transform .2s ease, background .2s ease;
+}
+.tool-card:hover .tool-tile {
+  transform: scale(1.08) rotate(-6deg);
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.tool-open { color: var(--accent); }
+.tool-arrow {
+  width: 34px; height: 34px;
+  border-radius: 999px;
+  display: grid; place-items: center;
+  border: 1px solid var(--border);
+  color: var(--accent);
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+.tool-card:hover .tool-arrow {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  transform: translateX(3px);
+}
+
+/* Footer social buttons */
+.social-btn {
+  box-shadow: 0 4px 10px rgba(20, 31, 56, 0.18);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 18px rgba(20, 31, 56, 0.26);
+}
+.social-btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Chart bars */
+.bar { transition: height .8s cubic-bezier(.22,.61,.36,1), filter .2s ease; }
+.bar:hover { filter: brightness(1.12); }
+
+/* Wave on the greeting emoji */
+@keyframes wave {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  10%, 30% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  40% { transform: rotate(-4deg); }
+}
+.wave { display: inline-block; transform-origin: 70% 70%; animation: wave 2.2s ease 0.3s 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, .bar, .wave { transition: none !important; animation: none !important; }
+  .tool-card:hover { transform: none; }
+  .tool-card:hover .tool-tile { transform: none; }
+  .social-btn:hover { transform: none; }
+}
