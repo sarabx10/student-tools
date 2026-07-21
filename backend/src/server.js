@@ -24,24 +24,6 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', service: 'student-tools-backend' });
 });
 
-// --- Temporary DB diagnostic (reports what the server actually loaded) ---
-app.get('/api/health/db', async (req, res) => {
-  const info = {
-    host: process.env.DB_HOST || '(unset)',
-    port: process.env.DB_PORT || '(unset)',
-    user: process.env.DB_USER || '(unset)',
-    name: process.env.DB_NAME || '(unset)',
-    ssl: process.env.DB_SSL || '(unset)',
-  };
-  try {
-    const pool = (await import('./config/db.js')).default;
-    await pool.query('SELECT 1');
-    res.json({ db: 'ok', ...info });
-  } catch (e) {
-    res.status(500).json({ db: 'error', code: e.code, message: e.message, ...info });
-  }
-});
-
 // --- API Routes ---
 app.use('/api/auth', authRoutes);
 app.use('/api/tools', toolRoutes);
